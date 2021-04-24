@@ -8,41 +8,50 @@
 # 12 turns until game over
 # module for input output? constants for messages + string interpol.
 
+module InputOutput
+  def show_board
+    puts self.board.to_s
+  end
+end
+
 class PlayingBoard
-  attr_accessor board:
-  def initialize
-    @board = {rows: [], feedback: [], code:}
+  attr_accessor :board
+  include InputOutput
+  def initialize(codemaker,codebreaker)
+    @board = { rows: [""], feedback: [""], code: [""] }
     @codemaker = codemaker
     @codebreaker = codebreaker
   end
+
+
 end
 
-class Row  
-  include InputOutput
-  def initialize
-    @playing_row = ["", "", "", ""]
-    @feedback_row = ["", "", "", ""]
-  end
-end
+# class Row  
+#   include InputOutput
+#   def initialize()
+#     @playing_row = ["", "", "", ""]
+#     @feedback_row = ["", "", "", ""]
+#   end
+# end
 
-class Player
-  def initialize
-    @name = name    
-  end
-end
+# class Player
+#   def initialize
+#     @name = name    
+#   end
+# end
 
-class CodeMaker < Player
-  def initialize 
-    super
-    @code = code
-  end
-end
+# class CodeMaker < Player
+#   def initialize(code)
+#     super
+#     @code = code
+#   end
+# end
 
-class CodeBreaker < Player
-  def initialize
-    super        
-  end
-end
+# class CodeBreaker < Player
+#   def initialize
+#     super        
+#   end
+# end
 
 class GameFlow
   def initialize
@@ -50,8 +59,7 @@ class GameFlow
   end
 end
 
-module InputOutput
-  def show_board
-    print PlayingBoard.board
-  end
-end
+
+
+game = PlayingBoard.new("hey", "there")
+game.show_board
