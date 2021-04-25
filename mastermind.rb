@@ -28,12 +28,35 @@ class PlayingBoard
     @board[:rows] = input
   end
 
+
+  def make_code(code_in)
+    #take input or run random method
+    code = [:red, :blue, :magenta, :green]
+  end
+
+  def random_code
+
+  end
+
+  def give_feedback
+    # take guess
+    # check against code
+    # send guess and result for making a row
+  end
+
 end
 
 class Row    
   
-  @@ICON = "#"
-  @@COLORS = {red: "\e[31m#{@@ICON}\e[0m", }
+  @@ICON = "@"
+  @@COLORS = {
+    red: "\e[91;1m#{@@ICON}\e[0m",
+    green: "\e[92;1m#{@@ICON}\e[0m",
+    blue: "\e[94;1m#{@@ICON}\e[0m",
+    blue: "\e[93;1m#{@@ICON}\e[0m",
+    magenta: "\e[95;1m#{@@ICON}\e[0m",
+    cyan: "\e[96;1m#{@@ICON}\e[0m",}
+
   def initialize(row_in, feedback_in)
     @playing_row = ["", "", "", ""]
     @feedback_row = ["", "", "", ""]    
@@ -50,15 +73,7 @@ class Row
     #send for feedback
   end
 
-  def make_code
 
-  end
-
-  def give_feedback
-    # take guess
-    # check against code
-    # send guess and result for making a row
-  end
 
 end
 
