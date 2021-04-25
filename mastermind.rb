@@ -12,8 +12,7 @@ require 'pry'
 # colorizing the console with constants - , display list, ask player "choose color for pos 1, then 2, then 3, then 4"
 
 # module InputOutput
-#   def show_board
-    
+#   def show_board    
 #   end
 # end
 
@@ -41,14 +40,26 @@ class Row
     binding.pry
   end
 
-  def make_row
-    @breaker_input = [:red, :red,:red,:red]
-
-
+  def make_row(guess, feedback)
+    #take guess and feedback result, make a row instance to add to PlayingBoard.board    
   end
+
+  def breaker_guess
+    #parse input
+    breaker_input = [:red, :red,:red,:red]
+    #send for feedback
+  end
+
   def make_code
 
   end
+
+  def give_feedback
+    # take guess
+    # check against code
+    # send guess and result for making a row
+  end
+
 end
 
 # class Player
