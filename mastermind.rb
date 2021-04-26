@@ -38,7 +38,8 @@ class PlayingBoard
 
   def self.define_code(_in = nil)
     #take input or run random method
-    return code = [:red, :blue, :magenta, :green]
+    code = [1, 2, 0, 5]
+    return Row.map_icons(code)
   end
 
   def generate_random_code
@@ -49,17 +50,18 @@ class PlayingBoard
     # take guess
     # check against code
     # send guess and result for making a row
-    return ["!"]
+    return [1,0]
   end
 
   def show_game    
     # binding.pry
-    out = " -"
+    out = " == "
     @board[:rows].each_with_index do |board_row, row_n|
-      out += "#{row_n}- "
-      out += "|  #{board_row.guessing_row.join("  |  ")}  |"
+      out += "#{row_n} - "
+      out += "|  #{board_row.guessing_row.join(" | ")}  |  "      
+      out += "( #{board_row.feedback_row.join(":")} )"
     end
-    puts out += " -- "
+    puts out += " =="
   end
 
 
@@ -68,17 +70,18 @@ end
 class Row    
   attr_reader :guessing_row, :feedback_row
   
-  @@ICON = "@"
+  @@ICON = ["@", "!", "?"]
   @@GUESS_SET = {
-    red: "\e[91;1m#{@@ICON}\e[0m",
-    green: "\e[92;1m#{@@ICON}\e[0m",
-    blue: "\e[94;1m#{@@ICON}\e[0m",
-    yellow: "\e[93;1m#{@@ICON}\e[0m",
-    magenta: "\e[95;1m#{@@ICON}\e[0m",
-    cyan: "\e[96;1m#{@@ICON}\e[0m"}
+    red:   "\e[30;41;1m  #{@@ICON[0]}  \e[0m",
+    green: "\e[30;42;1m  #{@@ICON[0]}  \e[0m",
+    cyan:  "\e[30;44;1m  #{@@ICON[0]}  \e[0m",
+    yellow:"\e[30;43;1m  #{@@ICON[0]}  \e[0m",
+    magenta: "\e[30;45;1m  #{@@ICON[0]}  \e[0m",
+    white:  "\e[30;47;1m  #{@@ICON[0]}  \e[0m"}
 
   @@FEEDBACK_SET = {
-    ye: 
+    half: "\e[33;1m#{@@ICON[1]}\e[0m",
+    whole: "\e[33;1m#{@@ICON[2]}\e[0m",
   }
 
 
@@ -88,21 +91,41 @@ class Row
   end
 
   def self.make_row(board_in)
-    guess = breaker_guess
-    feedback = board_in.give_feedback(guess)
+    guess = Row.map_icons(breaker_guess)
+    feedback = Row.map_icons(board_in.give_feedback(guess), 0)
     Row.new(guess, feedback)
     #take guess and feedback result, make a row instance to add to PlayingBoard.board    
   end
 
-
-  def self.breaker_guess
-    #parse input
-    breaker_input = [@@GUESS_SET[:red], @@GUESS_SET[:red],@@GUESS_SET[:red],@@GUESS_SET[:red]]
+  
+  
+  def self.breaker_guess    
+    temp_in = []
+    while temp_in.length < 4
+      digit = $stdin.getch      
+      case
+      when digit == "\u007F"
+        temp_in.pop if temp_in.length >= 1   
+      when (0..5).include?(digit.to_i)
+        p digit.to_i
+        temp_in.push(digit.to_i)
+      end 
+    end    
+    Row.map_icons(temp_in)
+    
+    
+    breaker_input = [0,4,3,5]
     #send for feedback    
     return breaker_input
   end
 
 
+
+  
+  def self.map_icons(values, set = 1)
+    set == 1 ? set = @@GUESS_SET : set = @@FEEDBACK_SET
+    return values.map { |x| set.values[x] }
+  end
 
 end
 
@@ -133,7 +156,6 @@ end
 
 current_game = PlayingBoard.setup_board
 current_game.add_row
-p current_game
 p current_game.show_game
 
 
