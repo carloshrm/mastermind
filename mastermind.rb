@@ -11,66 +11,95 @@ require 'pry'
 # module for input output? constants for messages + string interpol.
 # colorizing the console with constants - , display list, ask player "choose color for pos 1, then 2, then 3, then 4"
 
-# module InputOutput
-#   def show_board    
-#   end
-# end
+
 
 class PlayingBoard 
-  def initialize(codemaker,codebreaker, code)
-    @board = { rows: [""] }
-    @codemaker = codemaker
-    @codebreaker = codebreaker
+  
+  def initialize(code)
+    @board = { rows: [] }
+    # @codemaker = codemaker
+    # @codebreaker = codebreaker
     @CODE = code
   end
 
-  def add_row(input)
-    @board[:rows] = input
+  def self.setup_board
+
+
+    code_in = define_code    
+    PlayingBoard.new(code_in)
+
+
+  end
+
+  def add_row    
+    @board[:rows].unshift(Row.make_row(self))
   end
 
 
-  def make_code(code_in)
+  def self.define_code(_in = nil)
     #take input or run random method
-    code = [:red, :blue, :magenta, :green]
+    return code = [:red, :blue, :magenta, :green]
   end
 
-  def random_code
+  def generate_random_code
 
   end
 
-  def give_feedback
+  def give_feedback(guess_in)
     # take guess
     # check against code
     # send guess and result for making a row
+    return ["!"]
   end
+
+  def show_game    
+    # binding.pry
+    out = " -"
+    @board[:rows].each_with_index do |board_row, row_n|
+      out += "#{row_n}- "
+      out += "|  #{board_row.guessing_row.join("  |  ")}  |"
+    end
+    puts out += " -- "
+  end
+
 
 end
 
 class Row    
+  attr_reader :guessing_row, :feedback_row
   
   @@ICON = "@"
-  @@COLORS = {
+  @@GUESS_SET = {
     red: "\e[91;1m#{@@ICON}\e[0m",
     green: "\e[92;1m#{@@ICON}\e[0m",
     blue: "\e[94;1m#{@@ICON}\e[0m",
-    blue: "\e[93;1m#{@@ICON}\e[0m",
+    yellow: "\e[93;1m#{@@ICON}\e[0m",
     magenta: "\e[95;1m#{@@ICON}\e[0m",
-    cyan: "\e[96;1m#{@@ICON}\e[0m",}
+    cyan: "\e[96;1m#{@@ICON}\e[0m"}
 
-  def initialize(row_in, feedback_in)
-    @playing_row = ["", "", "", ""]
-    @feedback_row = ["", "", "", ""]    
-    binding.pry
+  @@FEEDBACK_SET = {
+    ye: 
+  }
+
+
+  def initialize(row_in, feed_in)
+    @guessing_row = row_in
+    @feedback_row = feed_in    
   end
 
-  def make_row(guess, feedback)
+  def self.make_row(board_in)
+    guess = breaker_guess
+    feedback = board_in.give_feedback(guess)
+    Row.new(guess, feedback)
     #take guess and feedback result, make a row instance to add to PlayingBoard.board    
   end
 
-  def breaker_guess
+
+  def self.breaker_guess
     #parse input
-    breaker_input = [:red, :red,:red,:red]
-    #send for feedback
+    breaker_input = [@@GUESS_SET[:red], @@GUESS_SET[:red],@@GUESS_SET[:red],@@GUESS_SET[:red]]
+    #send for feedback    
+    return breaker_input
   end
 
 
@@ -96,12 +125,15 @@ end
 #   end
 # end
 
-class GameFlow
-  def initialize
-    @PlayingBoard    
-  end
-end
+# class GameFlow
+#   def initialize
+#     @PlayingBoard    
+#   end
+# end
 
-test = Row.new
-puts test
+current_game = PlayingBoard.setup_board
+current_game.add_row
+p current_game
+p current_game.show_game
+
 
