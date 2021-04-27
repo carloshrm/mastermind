@@ -99,24 +99,33 @@ class Row
 
   
   
-  def self.breaker_guess    
-    temp_in = []
-    while temp_in.length < 4
+  def self.breaker_guess(still_building = true, temp_in = [])    
+    while still_building      
+      puts "\e[H\e[2J"
+      puts "Current guess: #{Row.map_icons(temp_in).join(" ")} |~ Enter to confirm -- Backspace to correct -- \n"
+      
       digit = $stdin.getch      
-      case
-      when digit == "\u007F"
-        temp_in.pop if temp_in.length >= 1   
-      when (0..5).include?(digit.to_i)
-        p digit.to_i
-        temp_in.push(digit.to_i)
+      
+      if digit == "\u007F"
+        temp_in.pop if temp_in.length >= 1 
+        next
+      end
+      
+      if digit == "\r"
+        if temp_in.length == 4
+          still_building = false
+        else          
+          
+        end
+        next
+      end
+      
+      if (0..5).include?(digit.to_i) && !temp_in.include?(digit.to_i)        
+        temp_in.push(digit.to_i) if temp_in.length < 4
       end 
     end    
-    Row.map_icons(temp_in)
-    
-    
-    breaker_input = [0,4,3,5]
-    #send for feedback    
-    return breaker_input
+    return temp_in
+
   end
 
 
